@@ -42,7 +42,8 @@ async function loadSVG(file) {
   img.src = url;
 }
 
-loadSVG('assets/test.svg');
+loadSVG('test.svg');
+
 
 // Coordinate tracker
 const coordBox = document.createElement('div');
