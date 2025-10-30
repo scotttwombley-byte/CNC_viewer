@@ -1,24 +1,24 @@
 body {
   margin: 0;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow: hidden;
+  background-color: #b9dcf5;
+  font-family: Arial, sans-serif;
+}
+#viewer {
+  width: 100vw;
   height: 100vh;
-}
-
-#viewer-container {
-  width: 90vw;
-  height: 90vh;
-  border: 1px solid #ccc;
-  background-image: linear-gradient(0deg, #eee 1px, transparent 1px),
-                    linear-gradient(90deg, #eee 1px, transparent 1px);
+  background-image: linear-gradient(0deg, transparent 95%, rgba(255,255,255,0.4) 95%),
+                    linear-gradient(90deg, transparent 95%, rgba(255,255,255,0.4) 95%);
   background-size: 1in 1in;
+  cursor: grab;
 }
-
-svg {
-  width: 100%;
-  height: 100%;
-  stroke: black;
-  fill: none;
+#coords {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  background: rgba(255,255,255,0.7);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  z-index: 10;
 }
