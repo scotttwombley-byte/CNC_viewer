@@ -1,55 +1,70 @@
-const svg = document.getElementById("cnc-svg");
-const coords = document.getElementById("coords");
+// viewer.js — loads and displays test.svg automatically
 
-let viewBox = { x: 0, y: 0, w: window.innerWidth, h: window.innerHeight };
-let isPanning = false;
-let startX, startY;
+document.addEventListener("DOMContentLoaded", async () => {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  document.body.style.margin = "0";
+  document.body.appendChild(canvas);
 
-function loadSVG() {
-  fetch("assets/test.svg")
-    .then(r => r.text())
-    .then(d => svg.innerHTML = d);
-}
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
 
-function updateCoords(evt) {
-  const pt = svg.createSVGPoint();
-  pt.x = evt.clientX;
-  pt.y = evt.clientY;
-  const cursor = pt.matrixTransform(svg.getScreenCTM().inverse());
-  coords.textContent = `X: ${cursor.x.toFixed(3)}″ | Y: ${cursor.y.toFixed(3)}″`;
-}
+  // Draw grid background
+  function drawGrid() {
+    ctx.strokeStyle = "#ddd";
+    ctx.lineWidth = 1;
+    for (let x = 0; x < canvas.width; x += 50) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvas.height);
+      ctx.stroke();
+    }
+    for (let y = 0; y < canvas.height; y += 50) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+    }
+  }
 
-svg.addEventListener("mousedown", e => {
-  isPanning = true;
-  startX = e.clientX;
-  startY = e.clientY;
-  svg.style.cursor = "grabbing";
+  // Load and display the SVG
+  async function loadSVG() {
+    try {
+      const response = await fetch("test.svg");
+      const svgText = await response.text();
+
+      // Create an image from the SVG text
+      const img = new Image();
+      const svgBlob = new Blob([svgText], { type: "image/svg+xml;charset=utf-8" });
+      const url = URL.createObjectURL(svgBlob);
+
+      img.onload = () => {
+        drawGrid();
+        const scale = 1.0;
+        ctx.drawImage(img, 50, 50, img.width * scale, img.height * scale);
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+    } catch (error) {
+      console.error("Failed to load SVG:", error);
+    }
+  }
+
+  drawGrid();
+  loadSVG();
+
+  // Track mouse position
+  canvas.addEventListener("mousemove", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left).toFixed(3);
+    const y = (e.clientY - rect.top).toFixed(3);
+    ctx.clearRect(0, 0, 180, 20);
+    ctx.fillStyle = "#000";
+    ctx.font = "14px monospace";
+    ctx.fillText(`X: ${x}″ | Y: ${y}″`, 10, 15);
+  });
 });
-svg.addEventListener("mouseup", () => {
-  isPanning = false;
-  svg.style.cursor = "grab";
-});
-svg.addEventListener("mousemove", e => {
-  updateCoords(e);
-  if (!isPanning) return;
-  const dx = startX - e.clientX;
-  const dy = startY - e.clientY;
-  viewBox.x += dx;
-  viewBox.y += dy;
-  startX = e.clientX;
-  startY = e.clientY;
-  svg.setAttribute("viewBox", `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
-});
-svg.addEventListener("wheel", e => {
-  e.preventDefault();
-  const scale = e.deltaY < 0 ? 0.9 : 1.1;
-  viewBox.w *= scale;
-  viewBox.h *= scale;
-  svg.setAttribute("viewBox", `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
-});
-window.addEventListener("resize", () => {
-  viewBox.w = window.innerWidth;
-  viewBox.h = window.innerHeight;
-  svg.setAttribute("viewBox", `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
-});
-loadSVG();
