@@ -46,6 +46,7 @@ loadSVG('https://raw.githubusercontent.com/scotttwombley-byte/CNC_viewer/refs/he
 
 
 
+
 // Coordinate tracker
 const coordBox = document.createElement('div');
 coordBox.style.position = 'fixed';
