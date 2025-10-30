@@ -1,0 +1,23 @@
+name: Auto Sync from ChatGPT
+on:
+  workflow_dispatch:        # allows you to trigger from a link I give you
+  push:
+    branches: [ main ]
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync files
+        run: |
+          echo "Auto-sync triggered at $(date)" > status.log
+          git config user.name "ChatGPT AutoSync"
+          git config user.email "bot@chatgpt.local"
+          git add .
+          git commit -m "Auto-sync update from ChatGPT" || echo "No changes to commit"
+          git push
