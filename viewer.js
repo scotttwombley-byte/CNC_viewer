@@ -42,7 +42,8 @@ async function loadSVG(file) {
   img.src = url;
 }
 
-loadSVG('test.svg');
+loadSVG('https://raw.githubusercontent.com/scotttwombley-byte/CNC_viewer/refs/heads/main/test.svg');
+
 
 
 // Coordinate tracker
