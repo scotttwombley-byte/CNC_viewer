@@ -42,7 +42,7 @@ async function loadSVG(file) {
   img.src = url;
 }
 
-loadSVG('test.svg'); // ← change to any SVG in your repo (ex: all_panels_rev17_preview.svg)
+loadSVG('assets/test.svg');
 
 // Coordinate tracker
 const coordBox = document.createElement('div');
