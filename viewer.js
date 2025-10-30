@@ -1,20 +1,23 @@
-// viewer.js — loads and displays test.svg automatically
+// viewer.js — fixed grid and SVG loader
 
 document.addEventListener("DOMContentLoaded", async () => {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   document.body.style.margin = "0";
+  document.body.style.overflow = "hidden";
   document.body.appendChild(canvas);
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    drawGrid();
   }
   window.addEventListener("resize", resizeCanvas);
   resizeCanvas();
 
-  // Draw grid background
+  // Draw the grid
   function drawGrid() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.strokeStyle = "#ddd";
     ctx.lineWidth = 1;
     for (let x = 0; x < canvas.width; x += 50) {
@@ -31,40 +34,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Load and display the SVG
+  // Load the SVG
   async function loadSVG() {
     try {
-      const response = await fetch("test.svg");
-      const svgText = await response.text();
+      const res = await fetch("test.svg");
+      if (!res.ok) throw new Error("SVG not found");
+      const svgText = await res.text();
 
-      // Create an image from the SVG text
       const img = new Image();
       const svgBlob = new Blob([svgText], { type: "image/svg+xml;charset=utf-8" });
       const url = URL.createObjectURL(svgBlob);
 
       img.onload = () => {
-        drawGrid();
-        const scale = 1.0;
-        ctx.drawImage(img, 50, 50, img.width * scale, img.height * scale);
+        ctx.drawImage(img, 100, 100);
         URL.revokeObjectURL(url);
       };
       img.src = url;
-    } catch (error) {
-      console.error("Failed to load SVG:", error);
+    } catch (err) {
+      console.error("Error loading SVG:", err);
+      ctx.fillStyle = "red";
+      ctx.font = "18px monospace";
+      ctx.fillText("⚠️ Error loading test.svg", 20, 40);
     }
   }
 
-  drawGrid();
-  loadSVG();
-
-  // Track mouse position
+  // Show coordinates
   canvas.addEventListener("mousemove", (e) => {
+    drawGrid();
     const rect = canvas.getBoundingClientRect();
     const x = (e.clientX - rect.left).toFixed(3);
     const y = (e.clientY - rect.top).toFixed(3);
-    ctx.clearRect(0, 0, 180, 20);
-    ctx.fillStyle = "#000";
+    ctx.fillStyle = "black";
     ctx.font = "14px monospace";
-    ctx.fillText(`X: ${x}″ | Y: ${y}″`, 10, 15);
+    ctx.fillText(`X: ${x}″ | Y: ${y}″`, 10, 20);
   });
+
+  drawGrid();
+  loadSVG();
 });
