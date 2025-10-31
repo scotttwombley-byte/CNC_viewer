@@ -8,8 +8,16 @@
 </head>
 <body>
   <h1>CNC Viewer</h1>
-  <div id="dropzone">Drag & drop SVG / PNG / JPG / DXF here<br><small>or click to load a file</small></div>
+  <div id="dropzone">
+    Drag & drop SVG / PNG / JPG / DXF here<br>
+    <small>or click to load a file</small>
+  </div>
   <canvas id="viewer"></canvas>
+
+  <div style="margin:1em;">
+    <button id="clearBtn" style="padding:0.6em 1.2em;font-size:1em;">Clear Viewer</button>
+  </div>
+
   <script src="viewer.js"></script>
 </body>
 </html>
