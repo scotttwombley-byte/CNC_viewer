@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CNC Viewer 2D</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CNC Viewer</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="coords">X: 0.000″ | Y: 0.000″</div>
-  <div id="viewer">
-    <svg id="cnc-svg" xmlns="http://www.w3.org/2000/svg"></svg>
-  </div>
+  <h1>CNC Viewer</h1>
+  <div id="dropzone">Drag & drop SVG / PNG / JPG / DXF here<br><small>or click to load a file</small></div>
+  <canvas id="viewer"></canvas>
   <script src="viewer.js"></script>
 </body>
 </html>
