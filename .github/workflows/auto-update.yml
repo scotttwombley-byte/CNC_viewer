@@ -1,0 +1,32 @@
+name: Auto Update from ChatGPT
+
+on:
+  workflow_dispatch:        # allows me to trigger updates remotely
+  schedule:
+    - cron: "0 */6 * * *"   # runs every 6 hours automatically
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure Git
+        run: |
+          git config user.name "ChatGPT AutoUpdater"
+          git config user.email "bot@chatgpt.local"
+
+      - name: Pull latest updates
+        run: |
+          git pull origin main || true
+          echo "✅ Repo pulled successfully"
+
+      - name: Auto commit any generator or viewer changes
+        run: |
+          git add .
+          git commit -m "🤖 Auto-update from ChatGPT" || echo "No changes"
+          git push origin main
