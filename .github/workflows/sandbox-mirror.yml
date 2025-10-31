@@ -1,0 +1,23 @@
+name: Sandbox Mirror
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pull new sandbox files
+        run: |
+          mkdir -p output
+          # this folder is where you’ll drop new files from sandbox or local runs
+      - name: Commit & push
+        run: |
+          git config user.name "Sandbox Mirror Bot"
+          git config user.email "bot@chatgpt.local"
+          git add output/
+          git commit -m "Mirror from sandbox" || echo "no changes"
+          git push
