@@ -1,0 +1,46 @@
+name: CNC Heartbeat Mirror
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "output/**"
+      - "uploads/**"
+      - "*.svg"
+      - "*.png"
+      - "*.jpg"
+      - "*.jpeg"
+      - "*.dxf"
+  schedule:
+    - cron: "*/1 * * * *"   # checks every minute
+
+permissions:
+  contents: write
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare folders
+        run: |
+          mkdir -p output uploads assets
+          echo "❤️  Heartbeat OK — Mirror running, checking for updates at $(date -u)"
+
+      - name: Copy new viewer files to assets
+        run: |
+          find output uploads -type f \( -iname '*.svg' -o -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.dxf' \) \
+            -exec cp --parents {} assets/ \; || echo "No new files to copy"
+
+      - name: Commit & push mirrored assets
+        run: |
+          git config user.name "Heartbeat Mirror Bot"
+          git config user.email "bot@chatgpt.local"
+          git add assets/
+          git commit -m "Auto-mirror: sync new CNC Viewer files at $(date -u)" || echo "No changes to commit"
+          git push || echo "Nothing to push, repo already current"
+
+      - name: Final heartbeat
+        run: |
+          echo "✅ Mirror cycle complete — next check will occur in 60s at $(date -u)"
