@@ -1,24 +1,32 @@
 body {
+  background: #222;
+  color: #eee;
+  font-family: sans-serif;
+  text-align: center;
   margin: 0;
-  overflow: hidden;
-  background-color: #b9dcf5;
-  font-family: Arial, sans-serif;
+  padding: 0;
+}
+h1 {
+  background: #333;
+  margin: 0;
+  padding: 0.5em;
+  font-weight: normal;
+}
+#dropzone {
+  border: 2px dashed #666;
+  padding: 2em;
+  margin: 1em auto;
+  width: 90%;
+  max-width: 600px;
+  background: #2c2c2c;
+  border-radius: 8px;
+  cursor: pointer;
 }
 #viewer {
-  width: 100vw;
-  height: 100vh;
-  background-image: linear-gradient(0deg, transparent 95%, rgba(255,255,255,0.4) 95%),
-                    linear-gradient(90deg, transparent 95%, rgba(255,255,255,0.4) 95%);
-  background-size: 1in 1in;
-  cursor: grab;
-}
-#coords {
-  position: fixed;
-  top: 8px;
-  left: 8px;
-  background: rgba(255,255,255,0.7);
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 14px;
-  z-index: 10;
+  display: block;
+  margin: 1em auto;
+  background: #111;
+  max-width: 90vw;
+  max-height: 70vh;
+  border: 1px solid #555;
 }
